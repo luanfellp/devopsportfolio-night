@@ -1,0 +1,1158 @@
+---
+import Layout from '@/layouts/Layout.astro';
+
+// Dados centralizados — edite aqui sem mexer no HTML
+const profile = {
+  name: 'Luan Moura',
+  role: 'Infrastructure · DevOps · Cloud · Cascavel, PR',
+  company: 'SmartBR',
+  github: 'https://github.com/luanfellp',
+  linkedin: 'https://www.linkedin.com/in/luanfelp96',
+  location: 'Cascavel, Paraná — Brasil',
+};
+
+const skills = [
+  { icon: '🐧', name: 'Linux & Servidores', tags: ['Ubuntu Server', 'RHEL', 'SUSE'] },
+  { icon: '📦', name: 'Containers & K8s', tags: ['Docker', 'Kubernetes'] },
+  { icon: '🖥️', name: 'Virtualização', tags: ['Proxmox', 'VMware'] },
+  { icon: '🌐', name: 'Redes & Firewall', tags: ['MikroTik', 'DNS', 'VPN', 'Fortinet'] },
+  { icon: '☁️', name: 'Cloud — AWS', tags: ['EC2', 'S3', 'IAM', 'VPC'] },
+  { icon: '🔁', name: 'CI/CD & DevOps', tags: ['GitHub Actions', 'Git', 'IaC', 'Jenkins'] },
+];
+
+const projects = [
+  {
+    title: 'Static Site Deploy — AWS S3 + GitHub Actions',
+    desc: 'Pipeline de CI/CD que faz deploy automático de site estático para um bucket S3 a cada push na branch main. IAM com least privilege e invalidação de cache.',
+    image: '/assets/portfoliostatico.png',
+    tags: ['AWS S3', 'GitHub Actions', 'IAM', 'CI/CD'],
+    status: 'wip' as const,
+    github: '#',
+    live: '#',
+  },
+];
+
+const certs = [
+  { icon: '🎓', name: 'Redes de Computadores', sub: 'UNOPAR · 2025 – 2028' },
+  { icon: '🌐', name: 'Desenvolvimento Web Completo', sub: '20 cursos + 20 projetos' },
+  { icon: '⚡', name: 'Scrum Foundation Professional — SFPC™', sub: 'Metodologias Ágeis' },
+  { icon: '🔗', name: 'Networking Basics', sub: 'Fundamentos de Redes' },
+  { icon: '🔐', name: 'Boas Práticas de Cibersegurança', sub: 'Cybersecurity Awareness' },
+  { icon: '⚙️', name: 'Formação Analista de Processos de TI', sub: 'Serviços de TI' },
+];
+
+const statusMap = {
+  wip:   { cls: 'status-wip',   label: '🔧 Em desenvolvimento' },
+  live:  { cls: 'status-live',  label: '✅ Ao vivo' },
+  study: { cls: 'status-study', label: '📚 Estudo' },
+};
+---
+
+<Layout>
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-inner">
+      <div class="logo">L<em>.</em>M</div>
+      <ul class="nav-links">
+        <li><a href="#hero">início</a></li>
+        <li><a href="#skills">skills</a></li>
+        <li><a href="#experiencia">experiência</a></li>
+        <li><a href="#projetos">projetos</a></li>
+        <li><a href="#certs">certs</a></li>
+        <li><a href="#contato">contato</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="wrap">
+      <div class="hero-layout">
+        <div>
+          <div class="hero-badge fade-up">
+            <span class="badge-dot"></span>Disponível para conexões
+          </div>
+          <h1 class="hn fade-up d1">LUAN<br /><span class="hl">MOURA</span></h1>
+          <p class="hero-sub fade-up d2">{profile.role}</p>
+          <p class="hero-desc fade-up d3">
+            Analista de Infraestrutura na <strong>{profile.company}</strong>, com sólida experiência
+            em Linux, virtualização, containers e redes corporativas. Em transição ativa para
+            <strong>Cloud</strong>, desenvolvendo projetos práticos na <strong>AWS</strong> com EC2,
+            S3 e pipelines de <strong>CI/CD</strong> via GitHub Actions. Entusiasta de Linux e open
+            source, buscando evoluir como <strong>Cloud &amp; DevOps Engineer</strong>.
+          </p>
+          <div class="cta-row fade-up d4">
+            <a href="#contato" class="btn btn-a">→ Entre em contato</a>
+            <a href="#projetos" class="btn btn-o">Ver projetos</a>
+          </div>
+        </div>
+        <div class="photo-wrap fade-right d2">
+          <div class="photo-glow"></div>
+          <div class="photo-box" id="photo-box">
+            <div class="photo-inner">
+              <img id="photo-preview" src="/assets/luan.png" alt="Luan Moura" />
+            </div>
+            <span class="photo-lbl">@ Studying</span>
+          </div>
+          <input type="file" id="photo-file" accept="image/*" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <div class="wrap">
+      <div class="sec-label fade-up">01 — Stack</div>
+      <h2 class="sh fade-up d1">HABILIDADES</h2>
+      <div class="skills-grid">
+        {
+          skills.map((sk, i) => (
+            <div class={`sk fade-up d${i + 1}`}>
+              <span class="sk-ico">{sk.icon}</span>
+              <div class="sk-name">{sk.name}</div>
+              <div class="tags">
+                {sk.tags.map((t) => (
+                  <span class="tag">{t}</span>
+                ))}
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIÊNCIA -->
+  <section id="experiencia">
+    <div class="wrap">
+      <div class="sec-label fade-up">02 — Trajetória</div>
+      <h2 class="sh fade-up d1">EXPERIÊNCIA</h2>
+      <div class="timeline">
+        <div class="titem fade-left">
+          <div class="t-period">dez 2024 — presente · 1a 4m</div>
+          <div class="t-role">Analista de Infraestrutura de TI Pleno</div>
+          <div class="t-co">Smart BR Soluções Tecnológicas · Cascavel, PR</div>
+          <p class="t-desc">
+            Suporte e manutenção da infraestrutura corporativa, garantindo disponibilidade,
+            estabilidade e segurança dos serviços. Atuação em ambientes Linux, virtualização,
+            containers e redes.
+          </p>
+          <ul class="t-list">
+            <li>Administração de servidores Linux e ambientes Proxmox</li>
+            <li>Implantação e manutenção de containers com Docker e Kubernetes</li>
+            <li>Configuração e suporte de redes e equipamentos MikroTik</li>
+            <li>Troubleshooting de infraestrutura, rede e serviços</li>
+            <li>Projetos pessoais em AWS (EC2, S3) com CI/CD via GitHub Actions</li>
+          </ul>
+        </div>
+        <div class="titem fade-left d1">
+          <div class="t-period">abr 2024 — nov 2024 · 8 meses</div>
+          <div class="t-role">Analista Técnico I</div>
+          <div class="t-co">SPSCOM · Universidade Veiga de Almeida — Rio de Janeiro, RJ</div>
+          <p class="t-desc">
+            Gerenciamento de servidores de impressão e suporte técnico em impressoras multimarcas.
+            Suporte remoto e presencial, mapeamento de impressoras em rede e gestão de usuários.
+          </p>
+        </div>
+        <div class="titem fade-left d2">
+          <div class="t-period">ago 2015 — ago 2023 · 8 anos</div>
+          <div class="t-role">Analista de Sistemas da Informação</div>
+          <div class="t-co">Ministério da Defesa · Rio de Janeiro, RJ</div>
+          <p class="t-desc">
+            Gerenciamento de servidores Linux/Unix e Windows Server, VMware, administração de
+            usuários e suporte remoto e presencial.
+          </p>
+          <ul class="t-list">
+            <li>Liderança de equipe de 3 pessoas</li>
+            <li>Implementação de sistemas de controle de pessoal e documentos</li>
+            <li>Treinamento e instrução de uso dos sistemas aos usuários</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJETOS -->
+  <section id="projetos">
+    <div class="wrap">
+      <div class="sec-label fade-up">03 — Lab</div>
+      <h2 class="sh fade-up d1">PROJETOS</h2>
+      <div class="projects-grid">
+        {
+          projects.map((proj, i) => (
+            <div class={`proj fade-up d${i + 1}`}>
+              <div class="proj-thumb">
+                <img src={proj.image} alt={proj.title} />
+              </div>
+              <div class="proj-body">
+                <div class="proj-header">
+                  <div class="proj-title">{proj.title}</div>
+                  <div class="proj-links">
+                    <a href={proj.github} class="proj-link" title="GitHub" target="_blank">⌥</a>
+                    <a href={proj.live} class="proj-link" title="Live" target="_blank">↗</a>
+                  </div>
+                </div>
+                <p class="proj-desc">{proj.desc}</p>
+                <div class="proj-footer">
+                  <div class="proj-stack">
+                    {proj.tags.map((t) => (
+                      <span class="proj-tag">{t}</span>
+                    ))}
+                  </div>
+                  <span class={`proj-status ${statusMap[proj.status].cls}`}>
+                    {statusMap[proj.status].label}
+                  </span>
+                </div>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- CERTS -->
+  <section id="certs">
+    <div class="wrap">
+      <div class="sec-label fade-up">04 — Formação</div>
+      <h2 class="sh fade-up d1">CERTS &amp; EDUCAÇÃO</h2>
+      <div class="certs-grid">
+        {
+          certs.map((cert, i) => (
+            <div class={`cert scale-in d${(i % 3) + 1}`}>
+              <div class="cert-ico">{cert.icon}</div>
+              <div>
+                <div class="cert-name">{cert.name}</div>
+                <div class="cert-sub">{cert.sub}</div>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTATO -->
+  <section id="contato">
+    <div class="wrap">
+      <div class="sec-label fade-up">05 — Vamos conversar</div>
+      <h2 class="sh fade-up d1">CONTATO</h2>
+      <div class="contact-grid">
+        <div class="fade-left">
+          <p class="c-intro">
+            Aberto a conexões e troca de conhecimento nas áreas de infraestrutura, DevOps e cloud.
+            Em transição ativa para AWS — projetos práticos em andamento.
+          </p>
+          <div class="c-links">
+            <a href={profile.linkedin} target="_blank" class="c-link">
+              <span class="c-link-ico">💼</span>linkedin.com/in/luanfelp96
+            </a>
+            <a href={profile.github} target="_blank" class="c-link">
+              <span class="c-link-ico">🐙</span>github.com/luanfellp
+            </a>
+            <a href="#" class="c-link"><span class="c-link-ico">📍</span>{profile.location}</a>
+          </div>
+        </div>
+        <div class="terminal fade-right d1">
+          <div class="term-bar">
+            <span class="dot2 dr"></span><span class="dot2 dy"></span><span class="dot2 dg"></span>
+            <span class="term-title">luan@smartbr — bash</span>
+          </div>
+          <div class="term-body">
+            <span class="tl"><span class="tp">❯ </span><span class="tc">whoami</span></span>
+            <span class="tl to">luan-moura · infra-engineer</span><br />
+            <span class="tl"><span class="tp">❯ </span><span class="tc"
+                >docker pull brain/cloud-stack</span
+              ></span>
+            <span class="tl to">pulling AWS Practitioner   [#########.] 90%</span>
+            <span class="tl to">pulling AWS Solutions Arch [######....] 60%</span><br />
+            <span class="tl"><span class="tp">❯ </span><span class="tc">cat core_skills.txt</span
+              ></span>
+            <span class="tl to">linux, docker, k8s, proxmox, mikrotik, aws, ci/cd</span><br />
+            <span class="tl"><span class="tp">❯ </span><span class="tc">uptime</span></span>
+            <span class="tl to" style="color:var(--accent)">up 29 years, available...</span><br />
+            <span class="tl"
+              ><span class="tp">❯ </span><span class="tc">open </span><span class="tlink"
+                >linkedin.com/in/luanfelp96</span
+              ></span>
+            <span class="tl to">Launching browser...</span><br />
+            <span class="tl"><span class="tp">❯ </span><span class="tcursor"></span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">© 2026 Luan Fellipe Moura Palmeira · Cascavel, PR · Feito com 💚</div>
+  </footer>
+</Layout>
+
+<style>
+  /* ── layout ── */
+  #bg-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 200;
+    padding: 1rem 0;
+    backdrop-filter: blur(24px);
+    background: rgba(6, 8, 16, 0.85);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-inner {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    font-family: var(--font-display);
+    font-size: 1.7rem;
+    letter-spacing: 0.05em;
+    color: var(--white);
+  }
+  .logo em {
+    color: var(--accent);
+    font-style: normal;
+  }
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--soft);
+    text-decoration: none;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: color 0.25s;
+    position: relative;
+    padding-bottom: 4px;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--accent);
+    transition: width 0.3s ease;
+  }
+  .nav-links a:hover {
+    color: var(--accent);
+  }
+  .nav-links a:hover::after {
+    width: 100%;
+  }
+  .wrap {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    position: relative;
+    z-index: 1;
+  }
+  section {
+    padding: 7rem 0;
+    position: relative;
+  }
+  .sec-label {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.7rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .sec-label::after {
+    content: '';
+    flex: 1;
+    max-width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+  }
+  h2.sh {
+    font-family: var(--font-display);
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    color: var(--white);
+    letter-spacing: 0.03em;
+    line-height: 1;
+    margin-bottom: 3rem;
+  }
+
+  /* ── hero ── */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding-top: 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-layout {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 4rem;
+    align-items: center;
+    width: 100%;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(0, 255, 224, 0.07);
+    border: 1px solid rgba(0, 255, 224, 0.18);
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 0.4rem 1rem;
+    border-radius: 2px;
+    margin-bottom: 1.5rem;
+  }
+  .badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.3;
+      transform: scale(0.7);
+    }
+  }
+  h1.hn {
+    font-family: var(--font-display);
+    font-size: clamp(3.8rem, 8vw, 7rem);
+    line-height: 0.95;
+    letter-spacing: 0.02em;
+    color: var(--white);
+    margin-bottom: 1.2rem;
+  }
+  h1.hn .hl {
+    -webkit-text-stroke: 1.5px var(--accent);
+    color: transparent;
+  }
+  .hero-sub {
+    font-family: var(--font-mono);
+    font-size: 0.73rem;
+    color: var(--soft);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+  }
+  .hero-desc {
+    font-size: 0.95rem;
+    color: var(--text);
+    line-height: 1.85;
+    max-width: 500px;
+    margin-bottom: 2.5rem;
+  }
+  .hero-desc strong {
+    color: var(--accent);
+  }
+  .cta-row {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    border-radius: 4px;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .btn-a {
+    background: var(--accent);
+    color: #040608;
+    font-weight: 600;
+  }
+  .btn-a:hover {
+    background: #00fff7;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0, 255, 224, 0.25);
+  }
+  .btn-o {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn-o:hover {
+    border-color: var(--accent2);
+    color: var(--accent2);
+    transform: translateY(-3px);
+  }
+  .photo-wrap {
+    position: relative;
+    display: flex;
+    justify-content: center;
+  }
+  .photo-glow {
+    position: absolute;
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0, 255, 224, 0.15), transparent 70%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+  .photo-box {
+    position: relative;
+    width: 300px;
+    height: 400px;
+    cursor: pointer;
+  }
+  .photo-box::before {
+    content: '';
+    position: absolute;
+    inset: -1.5px;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 50%, transparent 100%);
+    border-radius: 14px;
+    z-index: 0;
+  }
+  .photo-inner {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    background: var(--card);
+    border-radius: 13px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+  }
+  #photo-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .photo-lbl {
+    position: absolute;
+    bottom: -14px;
+    right: 10px;
+    z-index: 2;
+    background: var(--accent2);
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.35rem 0.8rem;
+    border-radius: 3px;
+  }
+  #photo-file {
+    display: none;
+  }
+
+  /* ── skills ── */
+  #skills {
+    background: var(--surface);
+  }
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .sk {
+    background: var(--card);
+    padding: 1.75rem 1.5rem;
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    transition: background 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .sk::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+  .sk:hover {
+    background: #161e30;
+  }
+  .sk:hover::before {
+    transform: scaleX(1);
+  }
+  .sk-ico {
+    font-size: 1.8rem;
+    margin-bottom: 0.75rem;
+    display: block;
+  }
+  .sk-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 0.6rem;
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+  }
+  .tag {
+    background: rgba(124, 108, 255, 0.1);
+    border: 1px solid rgba(124, 108, 255, 0.2);
+    color: #a89fff;
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.5rem;
+    border-radius: 2px;
+  }
+
+  /* ── timeline ── */
+  .timeline {
+    position: relative;
+    padding-left: 1.5rem;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 10px;
+    bottom: 0;
+    width: 1px;
+    background: linear-gradient(180deg, var(--accent), var(--border) 80%, transparent);
+  }
+  .titem {
+    position: relative;
+    margin-bottom: 3.5rem;
+    padding-left: 2rem;
+  }
+  .titem::before {
+    content: '';
+    position: absolute;
+    left: -1.5rem;
+    top: 10px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow:
+      0 0 0 3px rgba(0, 255, 224, 0.15),
+      0 0 16px rgba(0, 255, 224, 0.4);
+  }
+  .t-period {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+  .t-role {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 0.2rem;
+  }
+  .t-co {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--soft);
+    margin-bottom: 0.9rem;
+  }
+  .t-desc {
+    font-size: 0.85rem;
+    color: var(--text);
+    line-height: 1.8;
+    margin-bottom: 1rem;
+  }
+  .t-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+  .t-list li {
+    font-size: 0.8rem;
+    color: var(--soft);
+    padding-left: 1.1rem;
+    position: relative;
+  }
+  .t-list li::before {
+    content: '▹';
+    color: var(--accent);
+    position: absolute;
+    left: 0;
+  }
+
+  /* ── projects ── */
+  #projetos {
+    background: var(--surface);
+  }
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.25rem;
+  }
+  .proj {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition:
+      border-color 0.3s,
+      transform 0.3s;
+    position: relative;
+  }
+  .proj::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+    z-index: 1;
+  }
+  .proj:hover {
+    border-color: rgba(0, 255, 224, 0.25);
+    transform: translateY(-4px);
+  }
+  .proj:hover::after {
+    transform: scaleX(1);
+  }
+  .proj-thumb {
+    width: 100%;
+    height: 165px;
+    background: #0a0f1e;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .proj-thumb img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+  .proj:hover .proj-thumb img {
+    transform: scale(1.04);
+  }
+  .proj-body {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    flex: 1;
+  }
+  .proj-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .proj-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.3;
+  }
+  .proj-links {
+    display: flex;
+    gap: 0.4rem;
+    flex-shrink: 0;
+  }
+  .proj-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border);
+    color: var(--soft);
+    text-decoration: none;
+    font-size: 0.8rem;
+    transition: all 0.25s;
+  }
+  .proj-link:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(0, 255, 224, 0.06);
+  }
+  .proj-desc {
+    font-size: 0.82rem;
+    color: var(--text);
+    line-height: 1.75;
+    flex: 1;
+  }
+  .proj-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: auto;
+  }
+  .proj-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+  }
+  .proj-tag {
+    background: rgba(0, 255, 224, 0.07);
+    border: 1px solid rgba(0, 255, 224, 0.15);
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 0.57rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.55rem;
+    border-radius: 2px;
+  }
+  .proj-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.6rem;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+  .status-wip {
+    background: rgba(255, 189, 46, 0.08);
+    border: 1px solid rgba(255, 189, 46, 0.2);
+    color: #ffbd2e;
+  }
+  .status-live {
+    background: rgba(39, 201, 63, 0.08);
+    border: 1px solid rgba(39, 201, 63, 0.2);
+    color: #27c93f;
+  }
+  .status-study {
+    background: rgba(124, 108, 255, 0.1);
+    border: 1px solid rgba(124, 108, 255, 0.25);
+    color: #a89fff;
+  }
+
+  /* ── certs ── */
+  #certs {
+    background: var(--bg);
+  }
+  .certs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+  .cert {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    transition:
+      border-color 0.3s,
+      transform 0.3s;
+  }
+  .cert:hover {
+    border-color: rgba(0, 255, 224, 0.3);
+    transform: translateY(-3px);
+  }
+  .cert-ico {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    flex-shrink: 0;
+    background: rgba(0, 255, 224, 0.07);
+    border: 1px solid rgba(0, 255, 224, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+  }
+  .cert-name {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--white);
+    line-height: 1.4;
+  }
+  .cert-sub {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    color: var(--soft);
+    margin-top: 0.3rem;
+  }
+
+  /* ── contact ── */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+  .c-intro {
+    font-size: 0.9rem;
+    color: var(--text);
+    line-height: 1.9;
+    margin-bottom: 2rem;
+  }
+  .c-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .c-link {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.85rem 1.1rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.82rem;
+    transition: all 0.3s ease;
+  }
+  .c-link:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(0, 255, 224, 0.04);
+    transform: translateX(5px);
+  }
+  .c-link-ico {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+
+  /* ── terminal ── */
+  .terminal {
+    background: #080d17;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    font-family: var(--font-mono);
+  }
+  .term-bar {
+    background: #0f1523;
+    padding: 0.7rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .dot2 {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+  .dr {
+    background: #ff5f56;
+  }
+  .dy {
+    background: #ffbd2e;
+  }
+  .dg {
+    background: #27c93f;
+  }
+  .term-title {
+    flex: 1;
+    text-align: center;
+    font-size: 0.62rem;
+    color: var(--soft);
+    letter-spacing: 0.05em;
+  }
+  .term-body {
+    padding: 1.5rem;
+    font-size: 0.74rem;
+    line-height: 2;
+  }
+  .tl {
+    display: block;
+  }
+  .tp {
+    color: var(--accent);
+  }
+  .tc {
+    color: var(--white);
+  }
+  .to {
+    color: var(--soft);
+    padding-left: 1rem;
+  }
+  .tlink {
+    color: #7c9fff;
+  }
+  .tcursor {
+    display: inline-block;
+    width: 8px;
+    height: 13px;
+    background: var(--accent);
+    vertical-align: -2px;
+    animation: blink 1s step-end infinite;
+  }
+  @keyframes blink {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  }
+
+  /* ── footer ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem 0;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--soft);
+    letter-spacing: 0.06em;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── scroll reveal ── */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(40px);
+    transition:
+      opacity 0.75s ease,
+      transform 0.75s ease;
+  }
+  .fade-left {
+    opacity: 0;
+    transform: translateX(-40px);
+    transition:
+      opacity 0.75s ease,
+      transform 0.75s ease;
+  }
+  .fade-right {
+    opacity: 0;
+    transform: translateX(40px);
+    transition:
+      opacity 0.75s ease,
+      transform 0.75s ease;
+  }
+  .scale-in {
+    opacity: 0;
+    transform: scale(0.88);
+    transition:
+      opacity 0.65s ease,
+      transform 0.65s ease;
+  }
+  .is-vis {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .d1 {
+    transition-delay: 0.1s;
+  }
+  .d2 {
+    transition-delay: 0.2s;
+  }
+  .d3 {
+    transition-delay: 0.3s;
+  }
+  .d4 {
+    transition-delay: 0.4s;
+  }
+  .d5 {
+    transition-delay: 0.5s;
+  }
+  .d6 {
+    transition-delay: 0.6s;
+  }
+
+  /* ── responsive ── */
+  @media (max-width: 800px) {
+    .hero-layout {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+    .photo-wrap {
+      order: -1;
+    }
+    .photo-box {
+      width: 230px;
+      height: 310px;
+    }
+    .contact-grid {
+      grid-template-columns: 1fr;
+    }
+    .nav-links {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  import { initStarfield } from '../scripts/starfield';
+  import { initScrollReveal } from '../scripts/scroll-reveal';
+  import { initPhotoUpload } from '../scripts/photo-upload';
+
+  initStarfield();
+  initScrollReveal();
+  initPhotoUpload();
+</script>

@@ -1,0 +1,46 @@
+# ═══════════════════════════════════════════════════════════════
+#  ci.yml — Validação rápida em qualquer branch (exceto main)
+#
+#  Roda lint + type-check + build a cada push fora da main.
+#  Não faz deploy — serve pra feedback rápido durante desenvolvimento.
+# ═══════════════════════════════════════════════════════════════
+
+name: ✅ CI Check
+
+on:
+  push:
+    branches-ignore: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    name: Lint, Type-check & Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type-check
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build (smoke test)
+        run: npm run build
+
+      - name: Show build size
+        run: du -sh dist/

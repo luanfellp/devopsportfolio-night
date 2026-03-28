@@ -1,0 +1,93 @@
+# ═══════════════════════════════════════════════════════════════
+#  deploy.yml — Produção (branch: main) → EC2
+#
+#  Fluxo:
+#    1. ci     → lint + type-check
+#    2. build  → astro build → artefato dist/
+#    3. deploy → rsync para EC2 via SSH + reload nginx
+#
+#  Secrets necessários:
+#    EC2_HOST         — IP ou hostname da instância (ex: 3.84.12.5)
+#    EC2_USER         — usuário SSH (ex: ubuntu, ec2-user)
+#    EC2_SSH_KEY      — chave privada PEM (conteúdo completo)
+#    EC2_DEPLOY_PATH  — caminho no servidor (ex: /var/www/portfolio)
+# ═══════════════════════════════════════════════════════════════
+
+name: 🚀 Deploy → EC2
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    name: ✅ Lint & Type-check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+
+  build:
+    name: 🔨 Build
+    runs-on: ubuntu-latest
+    needs: ci
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run build
+      - name: Upload dist artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 1
+
+  deploy:
+    name: ☁️ Deploy → EC2
+    runs-on: ubuntu-latest
+    needs: build
+    environment: production
+    steps:
+      - name: Download dist artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Rsync dist/ → EC2
+        run: |
+          rsync -avz --delete \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
+            ./dist/ \
+            ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:${{ secrets.EC2_DEPLOY_PATH }}/
+
+      - name: Reload nginx
+        run: |
+          ssh -i ~/.ssh/deploy_key \
+              -o StrictHostKeyChecking=no \
+              ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} \
+              "sudo nginx -t && sudo systemctl reload nginx"
+
+      - name: 🎉 Done
+        run: echo "Deploy concluído em ${{ secrets.EC2_HOST }}${{ secrets.EC2_DEPLOY_PATH }}"
