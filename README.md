@@ -1,122 +1,71 @@
-# Luan Moura — Portfolio (Astro)
+🚀 Cloud-Native Portfolio: DevSecOps Flow (Astro + OpenTofu + AWS)
 
-Site estático migrado para **Astro** com pipeline CI/CD completo via **GitHub Actions**.
+Este repositório contém a infraestrutura e o código do meu portfólio profissional. O projeto foi desenhado sob a filosofia DevSecOps, priorizando a automação de infraestrutura (IaC), a segurança de containers e a eficiência de custos na nuvem (AWS Free Tier).
+🎯 Objetivos do Projeto
 
-## Stack
+    Provisionamento Imutável: Utilização de OpenTofu para garantir que a infraestrutura seja replicável e livre de configuração manual ("ClickOps").
 
-| Camada | Tecnologia |
-|--------|-----------|
-| Framework | [Astro](https://astro.build) v4 (output: static) |
-| Linting | ESLint + eslint-plugin-astro |
-| Types | TypeScript (strict) |
-| CI/CD | GitHub Actions |
-| Hospedagem | AWS S3 + CloudFront |
+    Segurança Proativa: Implementação de varredura de vulnerabilidades em camadas (Local e Cloud).
 
----
+    Eficiência de Recursos: Uso de imagens Alpine Linux para reduzir o footprint de memória e a superfície de ataque.
 
-## Comandos locais
+🛡️ Deep Dive em Segurança (CyberSecurity Focus)
 
-```bash
-npm install      # instala dependências
-npm run dev      # servidor local → http://localhost:4321
-npm run build    # gera dist/
-npm run preview  # serve dist/ localmente
-npm run lint     # ESLint
-npm run typecheck # tsc --noEmit
-```
+Como entusiasta de segurança, este projeto não apenas "roda um site", mas implementa camadas de proteção rigorosas:
+1. Gestão de Vulnerabilidades (Vulnerability Scanning)
 
----
+O ciclo de vida da imagem Docker passa por dois checkpoints críticos:
 
-## Estrutura do projeto
+    Shift-Left Security (Local): Antes do push, a imagem é validada localmente (ex: via Trivy) para identificar CVEs críticas em pacotes do sistema ou dependências do Node.js.
 
-```
-portfolio-astro/
-├── .github/
-│   └── workflows/
-│       ├── deploy.yml    # main → build + S3 + CloudFront
-│       ├── preview.yml   # PR   → preview isolado + cleanup
-│       └── ci.yml        # outras branches → lint + build
-├── public/
-│   └── assets/           # imagens (luan.png, thumbs de projetos)
-├── src/
-│   ├── layouts/
-│   │   └── Layout.astro  # HTML base, CSS global, fonts
-│   └── pages/
-│       └── index.astro   # página principal (dados centralizados no frontmatter)
-├── astro.config.mjs
-├── package.json
-└── tsconfig.json
-```
+    ECR Scan on Push: O repositório na AWS está configurado com scan_on_push = true. Cada nova versão do portfólio é automaticamente escaneada pela base de dados da AWS, gerando relatórios de segurança detalhados.
 
----
+2. Hardening de Container
 
-## Configurar CI/CD no GitHub
+    Alpine Linux Base: Em vez de imagens robustas e pesadas, utilizamos o Alpine Linux. Isso reduz o tamanho da imagem de ~1GB para menos de 100MB, eliminando binários desnecessários que poderiam ser explorados por atacantes.
 
-### 1. Secrets necessários
+    Least Privilege: O container roda apenas o necessário para o Nginx servir os arquivos estáticos do Astro.
 
-Vá em **Settings → Secrets and variables → Actions** e adicione:
+3. AWS Identity & Access Management (IAM)
 
-| Secret | Descrição |
-|--------|-----------|
-| `AWS_ACCESS_KEY_ID` | Chave IAM com permissões S3 + CloudFront |
-| `AWS_SECRET_ACCESS_KEY` | Secret da chave IAM |
-| `AWS_REGION` | Ex: `us-east-1` |
-| `S3_BUCKET` | Nome do bucket de produção (sem `s3://`) |
-| `S3_BUCKET_PREVIEW` | Bucket para previews de PR (pode ser o mesmo) |
-| `CF_DISTRIBUTION_ID` | ID da distribuição CloudFront |
+    Instâncias Sem Chaves: A instância EC2 não armazena AWS_ACCESS_KEY ou AWS_SECRET_KEY. Em vez disso, ela utiliza um IAM Instance Profile.
 
-### 2. Permissões IAM mínimas (least privilege)
+    Roles Temporárias: A máquina "assume" um cargo (Role) com permissão ReadOnly no ECR apenas quando precisa baixar a imagem, eliminando o risco de vazamento de credenciais permanentes.
 
-```json
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": ["s3:PutObject", "s3:DeleteObject", "s3:ListBucket", "s3:GetObject"],
-      "Resource": [
-        "arn:aws:s3:::SEU-BUCKET",
-        "arn:aws:s3:::SEU-BUCKET/*"
-      ]
-    },
-    {
-      "Effect": "Allow",
-      "Action": "cloudfront:CreateInvalidation",
-      "Resource": "arn:aws:cloudfront::ACCOUNT_ID:distribution/CF_DISTRIBUTION_ID"
-    }
-  ]
-}
-```
+🏗️ Arquitetura de Infraestrutura (IaC)
 
-### 3. Fluxo dos workflows
+A infraestrutura é provisionada via OpenTofu e consiste em:
+Recurso	Descrição
+EC2 (t3.micro)	Servidor host rodando Amazon Linux 2023 (Free Tier).
+ECR	Registro privado para armazenamento seguro de imagens Docker.
+Security Group	Firewall stateful permitindo apenas portas 80 (HTTP) e 22 (SSH gerenciado).
+User Data	Script de bootstrap que automatiza a instalação do Docker e o deploy do container no boot.
+🛠️ Como Reproduzir
+1. Preparação da Infraestrutura
+Bash
 
-```
-push → feature/xxx  →  ci.yml        (lint + typecheck + build)
-                          ↓ aprovado
-open PR              →  preview.yml  (build + deploy em /previews/pr-N/)
-                          ↓ bot comenta URL no PR
-merge → main         →  deploy.yml   (build + S3 sync + CF invalidation)
-close PR             →  preview.yml  (cleanup: remove /previews/pr-N/)
-```
+cd terraform
+tofu init
+tofu plan
+tofu apply
 
----
+2. Ciclo de Deploy do Container
+Bash
 
-## Adicionar projetos
+# Autenticação
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin <ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com
 
-Edite o array `projects` no frontmatter de `src/pages/index.astro`:
+# Build com foco em performance
+docker build -t devopsportfolio-night .
 
-```ts
-const projects = [
-  {
-    title: 'Nome do Projeto',
-    desc: 'Descrição curta.',
-    image: '/assets/meu-projeto.png',
-    tags: ['AWS', 'Terraform'],
-    status: 'live',   // 'live' | 'wip' | 'study'
-    github: 'https://github.com/...',
-    live: 'https://...',
-  },
-];
-```
+# Tag e Push (Trigger do Scan de Vulnerabilidades)
+docker tag devopsportfolio-night:latest <ECR_URL>:latest
+docker push <ECR_URL>:latest
 
-Coloque a imagem em `public/assets/` e atualize o `src`.
+📈 Roadmap de Evolução
+
+    [ ] SSL/TLS: Implementar HTTPS via AWS Certificate Manager e CloudFront.
+
+    [ ] CI/CD Pipeline: Automatizar todo o fluxo via GitHub Actions (Build -> Scan -> Push -> Deploy).
+
+    [ ] Monitoramento: Adicionar logs estruturados do Nginx no CloudWatch para análise de tráfego e tentativas de intrusão.
