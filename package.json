@@ -10,7 +10,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "astro": "^4.15.0"
+    "astro": "^6.1.1"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^7.0.0",

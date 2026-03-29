@@ -536,7 +536,7 @@ const statusMap = {
     position: relative;
     width: 300px;
     height: 400px;
-    cursor: pointer;
+    cursor: default;
   }
   .photo-box::before {
     content: '';
@@ -1150,9 +1150,6 @@ const statusMap = {
 <script>
   import { initStarfield } from '../scripts/starfield';
   import { initScrollReveal } from '../scripts/scroll-reveal';
-  import { initPhotoUpload } from '../scripts/photo-upload';
-
   initStarfield();
   initScrollReveal();
-  initPhotoUpload();
 </script>
